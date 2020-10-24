@@ -1,20 +1,5 @@
 #show output/1.
 
-% word(she).
-% pos(she, pronoun_subj).
-% 
-% word(her).
-% pos(her, pronoun_obj).
-% pos(her, det).
-% 
-% word(he).
-% word(him).
-% word(his).
-% 
-% pos(he, pronoun_subj).
-% pos(him, pronoun_obj).
-% pos(his, det).
-
 word(they).
 word(them).
 word(their).
@@ -63,8 +48,8 @@ pos(flail, vi).
 word(the).
 pos(the, det).
 
-% word(a).
-% pos(a, det).
+word(a).
+pos(a, det).
 
 word(into).
 pos(into, prep).
@@ -128,7 +113,7 @@ appears(W) :- word(W), output_component(W).
  
 :- not appears(into).
 :- output_component(seq(seq(touch, _), seq(into, _))).
-% :- output_component(seq(a, limbs)).
+:- output_component(seq(a, limbs)).
 
 
 % first_of(W, W) :- word(W), appears(W).
