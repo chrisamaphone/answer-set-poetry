@@ -16,11 +16,11 @@
 % pos(his, det).
 
 word(they).
-word(them).
+% word(them).
 word(their).
 
 pos(they, pronoun_subj).
-pos(them, pronoun_obj).
+% pos(them, pronoun_obj).
 pos(their, det).
 
 
@@ -41,13 +41,17 @@ word(eye).
 pos(eye,noun).
 plural(eye, eyes).
 
+word(grace).
+pos(grace, subj).
+pos(grace, obj).
+
 % Verbs
 
 word(transform).
 pos(transform, vt).
 
-word(unfurl).
-pos(unfurl, vi).
+word(see).
+pos(see, vt).
 
 word(touch).
 pos(touch, vt).
@@ -58,16 +62,30 @@ pos(glow, vi).
 word(flail).
 pos(flail, vi).
 
+word(unfurl).
+pos(unfurl, vi).
+
+word(fall).
+pos(fall, vi).
+
+
+
 % Determiners and prepositions
 
 word(the).
 pos(the, det).
 
-% word(a).
-% pos(a, det).
+word(a).
+pos(a, det).
 
 word(into).
 pos(into, prep).
+
+word(for).
+pos(for, prep).
+
+word(from).
+pos(from, prep).
 
 
 % Grammar expansion rules
@@ -125,16 +143,24 @@ output_component(X) :- output_component(seq(X,Y)).
 output_component(Y) :- output_component(seq(X,Y)).
  
 appears(W) :- word(W), output_component(W).
+
+2 { appears(W) : pos(W, prep) } 8.
  
-:- not appears(into).
 :- output_component(seq(seq(touch, _), seq(into, _))).
-% :- output_component(seq(a, limbs)).
+:- output_component(seq(a, X)), plural(_,X).
 
+first_of(W, W) :- word(W), appears(W).
+first_of(seq(W,Y), W) :- output_component(seq(W,Y)), word(W).
+first_of(seq(X,Y), W) :- first_of(X, W), output_component(seq(X,Y)).
 
-% first_of(W, W) :- word(W), appears(W).
-% first_of(seq(W,Y), W) :- output_component(seq(W,Y)), word(W).
-% first_of(seq(X,Y), W) :- first_of(X, W).
-% 
+first_word(W) :- output(O), first_of(O, W).
+
+#show first_word/1.
+
+% trying to force more than one first word
+more_than_one_first_word :- first_word(W1), first_word(W2), not W1=W2.
+:- not more_than_one_first_word.
+ 
 % last_of(W, W) :- word(W), appears(W).
 % last_of(seq(X,W), W) :- output_component(seq(X,W)), word(W).
 % last_of(seq(X,Y), W) :- last_of(Y, W).
