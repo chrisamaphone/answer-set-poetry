@@ -26,6 +26,10 @@ word(eye).
 pos(eye,noun).
 plural(eye, eyes).
 
+word(cloud).
+post(cloud, noun).
+plural(cloud, clouds).
+
 % Verbs
 
 word(transform).

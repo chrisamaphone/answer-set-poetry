@@ -16,12 +16,17 @@
 % pos(his, det).
 
 word(they).
-% word(them).
+word(them).
 word(their).
 
 pos(they, pronoun_subj).
 % pos(them, pronoun_obj).
 pos(their, det).
+
+% first take on meter - just nsyllables
+meter(they, 1).
+meter(them, 1).
+meter(their, 1).
 
 
 % Nouns
@@ -32,61 +37,75 @@ pos(transformation, noun).
 word(self).
 pos(self, noun).
 plural(self, selves).
+meter(self, 1). meter(selves, 1).
 
 word(limb).
 pos(limb, noun).
 plural(limb, limbs).
+meter(limb, 1). meter(limbs, 1).
 
 word(eye).
 pos(eye,noun).
 plural(eye, eyes).
+meter(eye, 1). meter(eyes, 1).
 
 word(grace).
 pos(grace, subj).
 pos(grace, obj).
+meter(grace, 1).
 
 % Verbs
 
 word(transform).
 pos(transform, vt).
+meter(transform, 2).
 
 word(see).
 pos(see, vt).
+meter(see, 1).
 
 word(touch).
 pos(touch, vt).
+meter(touch, 1).
 
-word(glow).
-pos(glow, vi).
+word(luminesce).
+pos(luminesce, vi).
+meter(luminesce, 3).
 
 word(flail).
 pos(flail, vi).
+meter(flail, 1).
 
 word(unfurl).
 pos(unfurl, vi).
+meter(unfurl, 2).
 
 word(fall).
 pos(fall, vi).
-
+meter(fall, 1).
 
 
 % Determiners and prepositions
 
 word(the).
 pos(the, det).
+meter(the, 1).
 
 word(a).
 pos(a, det).
+meter(a, 1).
 
 word(into).
 pos(into, prep).
+meter(into, 2).
 
 word(for).
 pos(for, prep).
+meter(for, 1).
 
 word(from).
 pos(from, prep).
-
+meter(from, 1).
 
 % Grammar expansion rules
 
@@ -157,22 +176,16 @@ first_word(W) :- output(O), first_of(O, W).
 
 #show first_word/1.
 
-% trying to force more than one first word
+% force more than one first word
 more_than_one_first_word :- first_word(W1), first_word(W2), not W1=W2.
 :- not more_than_one_first_word.
- 
-% last_of(W, W) :- word(W), appears(W).
-% last_of(seq(X,W), W) :- output_component(seq(X,W)), word(W).
-% last_of(seq(X,Y), W) :- last_of(Y, W).
-% 
-% adjacent(W1,W2) :- 
-%   output_component(seq(X,Y)), 
-%   last_of(X, W1), 
-% appears_times_in(W, 1, W) :- appears(W).
-% appears_times_in(W, 0, W2) :- appears(W2), appears(W), W!=W2.
-% appears_times_in(W, N1+N2, seq(X,Y)) :- 
-%   output_component(seq(X,Y)),
-%   appears_times_in(W, N1, X), 
-%   appears_times_in(W, N2, Y).
-% 
-% :- appears_times_in(transformation, N, S), N > 1.
+
+
+% defining meter for lines
+% meter(seq(X,Y), N+M)
+%  :- output_component(seq(X,Y)), meter(X,N), meter(Y,M).
+
+% force all lines to have the same meter
+% different_meter :- output(O1), output(O2), meter(O1,M1), meter(O2,M2), M1>M2. 
+
+% :- different_meter.
