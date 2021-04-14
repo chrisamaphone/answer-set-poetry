@@ -14,6 +14,8 @@ nonterm(X) :- prod(X, _).
 prod_seq(seq(H,T)) :- prod(_, seq(H,T)).
 term(T) :- prod(N, T), not prod_seq(T), not nonterm(T).
 
+%% Rules for parsing/expanding
+
 % shift (different cases for non-nil and nil)
 gen(Beta, seq(T,W))
   :- gen(seq(Beta,T), W), term(T).
@@ -26,7 +28,7 @@ gen(nil, seq(T,W))
   :- gen(seq(Beta, Gamma), W),
       prod(Gamma, Alpha).
 
-% reduce starting nonterm
+% reduce stand-alone nonterminal
 {gen(Alpha, W)}
   :- gen(Gamma, W),
       prod(Gamma, Alpha).
@@ -38,6 +40,8 @@ gen(Origin, nil)
 matches(Generated, Origin)
   :- gen(nil, Generated), origin(Origin).
 
+
+%%% Different use modes
 
 % Choose one origin such that it has at least 1 match.
 % 1 { origin(N) : nonterm(N) } 1.
