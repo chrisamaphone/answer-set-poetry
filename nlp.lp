@@ -1,13 +1,19 @@
+%% Parsing and parts of speech
 
-% term(awkward;cute;simple;turtle;slime;robot).
+% Word library; TODO import from prev. iterations
+pos(her, det).
 
-% production rules
+% Production rules for terminals (base categories)
+prod(POS, Word) :- pos(Word, POS). % access to more general word lib
 prod(det, the).
 prod(adj, awkward; adj, cute; adj, simple).
 prod(noun, turtle; noun, slime; noun, robot).
+prod(verb, dances; verb, chuckles; verb, thinks).
+
+% General production rules for compound categories
 prod(phrase, seq(adj,noun)).
 prod(dphrase, seq(det,phrase)).
-prod(verb, dances; verb, chuckles; verb, thinks).
+prod(dphrase, seq(det, noun)).
 prod(sentence, seq(dphrase, verb)).
 
 % defining terminals and nonterminals
@@ -67,6 +73,37 @@ origin(sentence).
 % 1 { origin(N) : nonterm(N) }.
 % :- not gen(nil, seq(the, seq(cute, seq(robot, seq(dances,nil))))).
 
-#show origin/1.
-#show matches/2.
+% #show origin/1.
+% #show matches/2.
 
+%%% Defining subsequences of generated sequences
+% relseq = "relevant sequence"
+relseq(S) :- relseq(seq(X,S)).
+relseq(G) :- matches(G, Origin).
+
+%%% Adding syllable counts
+syl(the, 1).
+syl(her, 1).
+syl(awkward, 2).
+syl(cute, 1).
+syl(simple, 2).
+syl(robot, 2).
+syl(turtle, 2).
+syl(slime, 1).
+syl(dances, 2).
+syl(thinks, 1).
+syl(chuckles, 2).
+
+syl(nil, 0).
+syl(seq(W, S), N1+N2)
+  :- relseq(seq(W,S)), syl(W,N1), syl(S,N2).
+
+total_syl(N, Generated) :- 
+  matches(Generated, Origin), syl(Generated, N).
+#show total_syl/2.
+
+% constraint: only generate utterances of equal syllable length
+% :- total_syl(N1, Gen1), total_syl(N2, Gen2), N1 != N2.
+
+% constraint: only generate utterance of syllable count 6
+% :- total_syl(N, Gen), N != 6.
